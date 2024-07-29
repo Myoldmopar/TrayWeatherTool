@@ -303,7 +303,7 @@ class TrayWeatherIcon:
 
 def run_main():
     signal(SIGINT, SIG_DFL)
-    app = TrayWeatherIcon()
+    TrayWeatherIcon()
     Gtk.main()
 
 
