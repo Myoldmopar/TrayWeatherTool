@@ -1,0 +1,21 @@
+# before you pip install pygobject, you need some system runtime dependencies
+
+# I think these are the 2 core libraries you need:
+# apt install gir1.2-appindicator3-0.1 libgirepository1.0-dev maybe others...
+
+# here are a few others I installed while trying to get it to work; I don't _think_ they are needed:
+# gobject-introspection gobject-introspection-bin gir1.2-freedesktop-dev gir1.2-girepository-3.0-dev
+# libgirepository1.0-dev libglib2.0-dev python-gi-dev gir1.2-appindicator3-0.1
+
+# and finally the actual Python packages
+matplotlib
+requests
+pygobject
+pyperclip
+pillow
+solar-angles>=0.22
+
+# PyCharm will still likely complain about not being able to import stuff from pygobject
+# This is because it is generating this dynamically at runtime from compiled libs
+# You should be able to right click on the import error and say "generate stubs for ... Gtk" or whatever
+# It will make an attempt at detecting all the library stubs, and the error should vanish

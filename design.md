@@ -1,0 +1,50 @@
+# Main Operation Logic
+
+As taken from the original VB.Net code.
+
+- Startup Object set as Form1, so code starts with Form1_Load
+  - Read data from configuration, or initialize it
+    - last location key
+    - Time/Temperature history
+    - Max Terms
+    - Rate
+  - If it is a custom location key, get latitude and longitude from key and set up / validate neighboring sites
+  - Call GetCounty()
+  - Call PerformFullUpdate
+  - Set timer
+- PerformFullUpdate() -- handles timer.tick()
+  - If currently updating (from a timer tick, for example), leave
+  - Set updating to True
+  - Call UpdateStormStatusThread()
+  - Call UpdateTemperatureThread()
+  - Update saved configuration file
+  - Set updating to False
+- UpdateStormStatusThread(optional test flag)
+  - If doing a test, simulate the test
+  - Otherwise GetWatchWarnings()
+  - Set color by warning type:
+    - Flood Watch: Powder Blue
+    - Flood Warning: White Smoke
+    - Storm Watch: Silver
+    - Storm Warning: Lime
+    - Tornado Watch: Yellow
+    - Tornado Warning: Red
+  - Update icon
+  - If Tornado warning, do a one-time notification dialog about it
+- UpdateTemperatureThread()
+  - Build the mesonet URL
+  - Download URL content
+  - If a predefined location, grab it from the matching line
+  - If custom location, grab the 4 neighbor temps, distances, and average them
+  - Store the temperature in the history array
+  - Check if the temperature is a new record
+- GetCounty()
+  - labs.silverbiology URL lookup
+- Plot Window
+  - Use MatPlotLib along with current time/temp history array(s)
+- Handle Menu Item Clicks
+  - Predefined Location: Set location key and call PerformFullUpdate()
+  - Rate: Set in config and call PerformFullUpdate()
+  - Max Terms: Set in config and call PerformFullUpdate()
+- Solar Calculations
+  - Try to use my solar library!
