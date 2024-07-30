@@ -13,7 +13,7 @@ requests
 pygobject
 pyperclip
 pillow
-solar-angles>=0.22
+solar-angles>=0.26
 
 # PyCharm will still likely complain about not being able to import stuff from pygobject
 # This is because it is generating this dynamically at runtime from compiled libs

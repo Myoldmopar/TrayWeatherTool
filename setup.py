@@ -17,7 +17,7 @@ setup(
     author='Edwin Lee',
     url='https://github.com/Myoldmopar/TrayWeatherTool',
     license='ModifiedBSD',
-    install_requires=['matplotlib', 'requests', 'pygobject', 'pyperclip', 'pillow', 'solar-angles>=0.22'],
+    install_requires=['matplotlib', 'requests', 'pygobject', 'pyperclip', 'pillow', 'solar-angles>=0.26'],
     entry_points={
         'gui_scripts': [],
         'console_scripts': ['tray_weather_tool=tray_weather.main:run_main',]
