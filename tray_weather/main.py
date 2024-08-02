@@ -16,6 +16,7 @@ from gi.repository import Gtk, AppIndicator3, GLib  # noqa: E402
 from tray_weather.config import Configuration  # noqa: E402
 from tray_weather.dialog_custom_location import DialogCustomLocation  # noqa: E402
 from tray_weather.dialog_solar_plot import show_solar_plot  # noqa: E402
+from tray_weather.dialog_temperature_plot import DialogTemperaturePlot  # noqa: E402
 from tray_weather.storms import StormType, StormManager  # noqa: E402
 from tray_weather.mesonet import MesonetManager  # noqa: E402
 from tray_weather.misc import mesonet_locations, time_step_minute_intervals, storm_tests  # noqa: E402
@@ -155,15 +156,15 @@ class TrayWeatherIcon:
         menu_item_adjust_settings.set_submenu(submenu_adjust)
         menu_main.append(menu_item_adjust_settings)
 
-        menu_main.append(Gtk.SeparatorMenuItem())
-
-        menu_item_info = Gtk.MenuItem(label="Info...")
-        menu_main.append(menu_item_info)
+        # menu_main.append(Gtk.SeparatorMenuItem())
+        #
+        # menu_item_info = Gtk.MenuItem(label="Info...")
+        # menu_main.append(menu_item_info)
 
         menu_main.append(Gtk.SeparatorMenuItem())
 
         menu_item_exit = Gtk.MenuItem(label="Exit")
-        menu_item_exit.connect("activate", Gtk.main_quit)
+        menu_item_exit.connect("activate", self.quit)
         menu_main.append(menu_item_exit)
 
         # show all....
@@ -212,9 +213,10 @@ class TrayWeatherIcon:
     def update_now(self, _widget):
         self.update()
 
-    @staticmethod
-    def plot_temps(_widget):
-        print("Inside plot_temps")
+    def plot_temps(self, _widget):
+        if len(self.config.temp_history) == 1:
+            self.update()
+        DialogTemperaturePlot(self.config.temp_history)
 
     def copy_history(self, _widget):
         history = self.config.temp_history_for_clipboard()
@@ -270,7 +272,6 @@ class TrayWeatherIcon:
         self.update()
 
     def update_rate(self, _widget, frequency: int):
-        print(f"Inside update_rate, trying to update to frequency: {frequency}")
         if self.timeout_id is not None:
             GLib.source_remove(self.timeout_id)
         self.config.frequency_minutes = frequency
@@ -299,6 +300,10 @@ class TrayWeatherIcon:
     def on_timer_ticked(self):
         self.update()
         return True
+
+    def quit(self):
+        self.config.save_to_file()
+        Gtk.main_quit()
 
 
 def run_main():
