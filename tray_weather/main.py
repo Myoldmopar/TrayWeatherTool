@@ -18,8 +18,7 @@ from tray_weather.dialog_custom_location import DialogCustomLocation  # noqa: E4
 from tray_weather.dialog_solar_plot import show_solar_plot  # noqa: E402
 from tray_weather.dialog_temperature_plot import DialogTemperaturePlot  # noqa: E402
 from tray_weather.storms import StormType, StormManager  # noqa: E402
-from tray_weather.mesonet import MesonetManager  # noqa: E402
-from tray_weather.misc import mesonet_locations, time_step_minute_intervals, storm_tests  # noqa: E402
+from tray_weather.location import mesonet_locations, MesonetLocation  # noqa: E402
 
 
 class TrayWeatherIcon:
@@ -74,6 +73,11 @@ class TrayWeatherIcon:
 
         menu_item_storm_tests = Gtk.MenuItem(label="Storm Tests")
         submenu_storm_tests = Gtk.Menu()
+
+        storm_tests = [
+            "Flood Watch", "Flood Warning", "ThunderStorm Watch",
+            "ThunderStorm Warning", "Tornado Watch", "Tornado Warning"
+        ]
         for st in storm_tests:
             item = Gtk.MenuItem(label=st)
             item.connect("activate", self.storm_test, st)
@@ -146,6 +150,7 @@ class TrayWeatherIcon:
         submenu_adjust.append(menu_item_adjust_custom)
         menu_item_adjust_update_rate = Gtk.MenuItem(label="Update Rate")
         submenu_rate = Gtk.Menu()
+        time_step_minute_intervals = [1, 2, 5, 10, 15]
         for frequency in time_step_minute_intervals:
             label = f"{frequency} minute" if frequency == 1 else f"{frequency} minutes"
             item = Gtk.MenuItem(label=label)
@@ -155,11 +160,6 @@ class TrayWeatherIcon:
         submenu_adjust.append(menu_item_adjust_update_rate)
         menu_item_adjust_settings.set_submenu(submenu_adjust)
         menu_main.append(menu_item_adjust_settings)
-
-        # menu_main.append(Gtk.SeparatorMenuItem())
-        #
-        # menu_item_info = Gtk.MenuItem(label="Info...")
-        # menu_main.append(menu_item_info)
 
         menu_main.append(Gtk.SeparatorMenuItem())
 
@@ -187,13 +187,12 @@ class TrayWeatherIcon:
         if force_temp:
             temperature = force_temp
         else:
-            m = MesonetManager()
             if self.config.location.is_custom:
                 pass  # need to call custom location temp getter
                 temperature = -99
             else:
                 location_key = mesonet_locations[self.config.location.predefined_index].key
-                temperature = m.get_temp_by_key(location_key)
+                temperature = MesonetLocation.get_temp_by_key(location_key)
         self.config.log_data_point(temperature)
         s_temp = str(int(temperature))
         # toggle the icon file flag, and use b if the toggle is set, otherwise back to a
