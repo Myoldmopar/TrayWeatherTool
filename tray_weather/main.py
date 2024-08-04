@@ -20,6 +20,8 @@ from tray_weather.dialog_temperature_plot import DialogTemperaturePlot  # noqa: 
 from tray_weather.storms import StormType, StormManager  # noqa: E402
 from tray_weather.location import mesonet_locations, MesonetLocation  # noqa: E402
 
+# TODO: Pull out more and more of the code here into unit tests.  This file should be very minimal.
+
 
 class TrayWeatherIcon:
     def __init__(self):
