@@ -24,7 +24,8 @@ class DataPoint:
         }
 
     def to_csv(self) -> str:
-        return f'{self.time_stamp.strftime('%Y-%m-%d %H:%M:%S')},{self.temperature}'
+        s_time_stamp = self.time_stamp.strftime('%Y-%m-%d %H:%M:%S')
+        return f'{s_time_stamp},{self.temperature}'
 
 
 class DataPointHistoryProps:
