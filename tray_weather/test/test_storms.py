@@ -3,7 +3,7 @@ from unittest import mock, TestCase
 
 import requests
 import gi
-gi.require_version('Gdk', '4.0')
+gi.require_version('Gdk', '3.0')
 from gi.repository import Gdk  # noqa: E402
 
 from tray_weather.storms import StormType, StormManager  # noqa: E402
