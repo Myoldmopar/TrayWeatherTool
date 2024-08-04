@@ -19,7 +19,7 @@ Both of these will do the same thing.  If you want the icon to start when the sy
 startup applications, just remember to execute it with the Python you used to install it.  Something like:
 `/path/to/venv/bin/python3 -m tray_weather`.
 
-## Development [![Flake8](https://github.com/Myoldmopar/TrayWeatherTool/actions/workflows/flake8.yml/badge.svg)](https://github.com/Myoldmopar/TrayWeatherTool/actions/workflows/flake8.yml) [![Tests](https://github.com/Myoldmopar/TrayWeatherTool/actions/workflows/test.yml/badge.svg)](https://github.com/Myoldmopar/TrayWeatherTool/actions/workflows/test.yml)
+## Development [![Flake8](https://github.com/Myoldmopar/TrayWeatherTool/actions/workflows/flake8.yml/badge.svg)](https://github.com/Myoldmopar/TrayWeatherTool/actions/workflows/flake8.yml) [![Tests](https://github.com/Myoldmopar/TrayWeatherTool/actions/workflows/test.yml/badge.svg)](https://github.com/Myoldmopar/TrayWeatherTool/actions/workflows/test.yml) [![Coverage Status](https://coveralls.io/repos/github/Myoldmopar/TrayWeatherTool/badge.svg?branch=AddTesting)](https://coveralls.io/github/Myoldmopar/TrayWeatherTool?branch=AddTesting)
 
 To debug or develop on this code, download the repo, set up a virtual environment, install dependencies, and run main:
  - `git clone https://github.com/Myoldmopar/TrayWeatherTool`
