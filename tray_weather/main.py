@@ -20,8 +20,6 @@ from tray_weather.dialog_temperature_plot import DialogTemperaturePlot  # noqa: 
 from tray_weather.storms import StormType, StormManager  # noqa: E402
 from tray_weather.location import mesonet_locations, MesonetLocation  # noqa: E402
 
-# TODO: Pull out more and more of the code here into unit tests.  This file should be very minimal.
-
 
 class TrayWeatherIcon:
     def __init__(self):
@@ -228,18 +226,9 @@ class TrayWeatherIcon:
         self.update()
 
     def storm_test(self, _widget, test_name: str):
-        if test_name == "Flood Watch":
-            self.update(force_storm=StormType.FloodWatch)
-        elif test_name == "Flood Warning":
-            self.update(force_storm=StormType.FloodWarning)
-        elif test_name == "ThunderStorm Watch":
-            self.update(force_storm=StormType.ThunderStormWatch)
-        elif test_name == "ThunderStorm Warning":
-            self.update(force_storm=StormType.ThunderStormWarning)
-        elif test_name == "Tornado Watch":
-            self.update(force_storm=StormType.TornadoWatch)
-        elif test_name == "Tornado Warning":
-            self.update(force_storm=StormType.TornadoWarning)
+        st = StormType.from_string(test_name)
+        if st != StormType.NoStorm:
+            self.update(force_storm=st)
 
     def temp_test(self, _widget, temperature: int):
         print(f"Inside temp_test trying to test: {temperature}")

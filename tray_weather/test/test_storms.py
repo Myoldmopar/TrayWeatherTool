@@ -9,6 +9,17 @@ from gi.repository import Gdk  # noqa: E402
 from tray_weather.storms import StormType, StormManager  # noqa: E402
 
 
+class TestStormType(TestCase):
+    def test_from_string(self):
+        self.assertEqual(StormType.from_string("Flood Watch"), StormType.FloodWatch)
+        self.assertEqual(StormType.from_string("Flood Warning"), StormType.FloodWarning)
+        self.assertEqual(StormType.from_string("ThunderStorm Watch"), StormType.ThunderStormWatch)
+        self.assertEqual(StormType.from_string("ThunderStorm Warning"), StormType.ThunderStormWarning)
+        self.assertEqual(StormType.from_string("Tornado Watch"), StormType.TornadoWatch)
+        self.assertEqual(StormType.from_string("Tornado Warning"), StormType.TornadoWarning)
+        self.assertEqual(StormType.from_string("Who?"), StormType.NoStorm)
+
+
 class TestStormManager(TestCase):
     def test_construction(self):
         sm = StormManager(23.0, -97)

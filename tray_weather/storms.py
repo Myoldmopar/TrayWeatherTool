@@ -21,6 +21,22 @@ class StormType:
             StormType.TornadoWatch, StormType.TornadoWarning
         ]
 
+    @staticmethod
+    def from_string(string: str) -> int:
+        if string == "Flood Watch":
+            return StormType.FloodWatch
+        elif string == "Flood Warning":
+            return StormType.FloodWarning
+        elif string == "ThunderStorm Watch":
+            return StormType.ThunderStormWatch
+        elif string == "ThunderStorm Warning":
+            return StormType.ThunderStormWarning
+        elif string == "Tornado Watch":
+            return StormType.TornadoWatch
+        elif string == "Tornado Warning":
+            return StormType.TornadoWarning
+        return StormType.NoStorm
+
 
 class StormManager:
     def __init__(self, latitude: float, longitude: float):
