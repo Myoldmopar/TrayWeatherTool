@@ -10,11 +10,13 @@ jobs:
   unit_testing:
     strategy:
       matrix:
-        os: [ windows-latest, macos-12, ubuntu-24.04 ]
+        os: [ ubuntu-24.04 ]  #  windows-latest, macos-12,
         py: [ "3.11", "3.12" ]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4.1.7
+    - name: Install System Dependencies
+      run: sudo apt install libgirepository1.0-dev gir1.2-appindicator3-0.1 libcairo2-dev gir1.2-gtk-4.0
     - name: Set up Python
       uses: actions/setup-python@v5.1.0
       with:

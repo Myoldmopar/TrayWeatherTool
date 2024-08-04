@@ -1,0 +1,8 @@
+[run]
+source = tray_weather
+
+[report]
+omit =
+    */tray_weather/dialog*.py
+    */tray_weather/__main__.py
+    */tray_weather/main.py

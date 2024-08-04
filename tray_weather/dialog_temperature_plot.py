@@ -57,10 +57,9 @@ class DialogTemperaturePlot(Gtk.Dialog):
 
 if __name__ == "__main__":
     fake_data = deque()
-    fake_data.append(DataPoint(datetime(2024, 8, 2, 1, 0, 0), 23))
-    fake_data.append(DataPoint(datetime(2024, 8, 2, 2, 0, 0), 28))
-    fake_data.append(DataPoint(datetime(2024, 8, 2, 3, 0, 0), 41))
-    fake_data.append(DataPoint(datetime(2024, 8, 2, 4, 0, 0), 102))
-    fake_data.append(DataPoint(datetime(2024, 8, 2, 4, 30, 0), -10))
-    fake_data.append(DataPoint(datetime(2024, 8, 2, 5, 0, 0), 87))
+    hours = [1, 2, 3, 4, 4, 5]
+    minutes = [0, 0, 0, 0, 30, 0]
+    temps = [23, 28, 41, 102, -10, 87]
+    for h, m, t in zip(hours, minutes, temps):
+        fake_data.append(DataPoint().from_values(datetime(2024, 8, 2, h, m, 0), t))
     DialogTemperaturePlot(fake_data)

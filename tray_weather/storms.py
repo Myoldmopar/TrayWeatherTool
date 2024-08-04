@@ -1,4 +1,5 @@
 import requests
+from typing import Callable, Optional
 import xml.etree.ElementTree as ElementT
 
 
@@ -10,6 +11,15 @@ class StormType:
     TornadoWatch = 4
     ThunderStormWarning = 5
     TornadoWarning = 6
+
+    @staticmethod
+    def get_all() -> list[int]:
+        return [
+            StormType.NoStorm,
+            StormType.FloodWatch, StormType.FloodWarning,
+            StormType.ThunderStormWatch, StormType.ThunderStormWarning,
+            StormType.TornadoWatch, StormType.TornadoWarning
+        ]
 
 
 class StormManager:
@@ -36,11 +46,14 @@ class StormManager:
         else:
             return 'orange'
 
-    def get_watch_warnings(self):
+    def get_watch_warnings(self, unit_test_get: Optional[Callable] = None):
         self.storm_type = StormType.NoStorm
         url = f"https://api.weather.gov/alerts/active.atom?point={self.latitude}%2C{self.longitude}"
         try:
-            response = requests.get(url)
+            if unit_test_get is None:  # pragma: no cover
+                response = requests.get(url)  # not unit testing the actual http request
+            else:
+                response = unit_test_get(url)
         except requests.exceptions.RequestException as e:
             print("Request failed: {}".format(e))
             return
@@ -62,14 +75,7 @@ class StormManager:
                             found_events.add(StormType.ThunderStormWarning)
                         elif 'Tornado Watch' in attribute.text:
                             found_events.add(StormType.TornadoWatch)
-                        elif 'Thunderstorm Warning' in attribute.text:
+                        elif 'Tornado Warning' in attribute.text:
                             found_events.add(StormType.TornadoWarning)
                         break
         self.storm_type = max(found_events)
-
-
-if __name__ == '__main__':
-    lat = 35.15
-    long = -98.47
-    s = StormManager(lat, long)
-    s.get_watch_warnings()
