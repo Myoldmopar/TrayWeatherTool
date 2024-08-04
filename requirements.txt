@@ -1,7 +1,7 @@
 # before you pip install pygobject, you need some system runtime dependencies
 
 # I think these are the 2 core libraries you need:
-# apt install gir1.2-appindicator3-0.1 libgirepository1.0-dev libcairo2-dev gobject-introspection gir1.2-gtk-3.0 python-gi-dev
+# apt install libgirepository1.0-dev gir1.2-appindicator3-0.1 libcairo2-dev gir1.2-gtk-4.0
 
 # here are a few others I installed while trying to get it to work; I don't _think_ they are needed:
 # gobject-introspection-bin gir1.2-freedesktop-dev gir1.2-girepository-3.0-dev

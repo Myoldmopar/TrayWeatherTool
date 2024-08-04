@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4.1.7
     - name: Install System Dependencies
-      run: sudo apt install gir1.2-appindicator3-0.1 libgirepository1.0-dev libcairo2-dev gir1.2-gtk-4.0  # try without these gobject-introspection gir1.2-gtk-3.0 python-gi-dev gir1.2-gdkpixbuf-2.0
+      run: sudo apt install libgirepository1.0-dev gir1.2-appindicator3-0.1 libcairo2-dev gir1.2-gtk-4.0
     - name: Set up Python
       uses: actions/setup-python@v5.1.0
       with:
