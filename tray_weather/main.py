@@ -296,7 +296,7 @@ class TrayWeatherIcon:
         self.update()
         return True
 
-    def quit(self):
+    def quit(self, *_):
         self.config.save_to_file()
         Gtk.main_quit()
 
