@@ -2,11 +2,19 @@ from pathlib import Path
 from unittest import mock, TestCase
 
 import requests
-import gi
-gi.require_version('Gdk', '4.0')
-from gi.repository import Gdk  # noqa: E402
 
-from tray_weather.storms import StormType, StormManager  # noqa: E402
+from tray_weather.storms import StormType, StormManager
+
+
+class TestStormType(TestCase):
+    def test_from_string(self):
+        self.assertEqual(StormType.from_string("Flood Watch"), StormType.FloodWatch)
+        self.assertEqual(StormType.from_string("Flood Warning"), StormType.FloodWarning)
+        self.assertEqual(StormType.from_string("ThunderStorm Watch"), StormType.ThunderStormWatch)
+        self.assertEqual(StormType.from_string("ThunderStorm Warning"), StormType.ThunderStormWarning)
+        self.assertEqual(StormType.from_string("Tornado Watch"), StormType.TornadoWatch)
+        self.assertEqual(StormType.from_string("Tornado Warning"), StormType.TornadoWarning)
+        self.assertEqual(StormType.from_string("Who?"), StormType.NoStorm)
 
 
 class TestStormManager(TestCase):
@@ -15,11 +23,13 @@ class TestStormManager(TestCase):
         self.assertEqual(sm.storm_type, StormType.NoStorm)
 
     def test_icon_color(self):
-        rgba = Gdk.RGBA()
+        this_file = Path(__file__).resolve()
+        valid_x11_color_file = this_file.parent / 'x11_color_names.txt'
+        valid_x11_color_names = valid_x11_color_file.read_text().split('\n')
         sm = StormManager(23.0, -97)
         for st in StormType.get_all():
             color = sm.icon_color(st)
-            self.assertTrue(rgba.parse(color))
+            self.assertIn(color, valid_x11_color_names)
 
     @mock.patch('requests.get')
     def test_watch_warnings(self, mock_get):

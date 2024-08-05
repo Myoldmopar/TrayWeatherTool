@@ -18,11 +18,14 @@ class Configuration:
         else:  # pragma: no cover
             # not touching the actual home dir file in unit tests, so skipping coverage here
             self.config_file = Path.home() / ".tray_weather.json"
-        if self.config_file.exists():
+        # noinspection PyBroadException
+        try:
             with self.config_file.open() as f:
                 contents = loads(f.read())
             self.location.set_from_config(contents['location'])
-        else:
+        except Exception:
+            # handle new file initialization as well as problems loading corrupted files
+            # this should be covered by unit tests for new file initialization issues
             self.save_to_file()
 
     def save_to_file(self):
@@ -30,8 +33,12 @@ class Configuration:
         config['location'] = self.location.to_dict()
         config['temp_history'] = [x.to_dict() for x in self.temp_history]
         config['frequency_minutes'] = self.frequency_minutes
-        with self.config_file.open('w') as f:
-            f.write(dumps(config))
+        # noinspection PyBroadException
+        try:
+            with self.config_file.open('w') as f:
+                f.write(dumps(config))
+        except Exception:  # pragma: no cover
+            pass  # just don't save if something goes that terribly wrong.  In the future this could show a dialog.
 
     def log_data_point(self, temperature: float):
         self.temp_history.append(DataPoint().from_values(datetime.now(), temperature))

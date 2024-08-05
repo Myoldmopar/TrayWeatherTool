@@ -45,3 +45,8 @@ class TestDataPointHistory(TestCase):
             fake_data.append(DataPoint().from_values(datetime(2024, 8, 2, h, m, 0), t))
         dph = DataPointHistoryProps(fake_data)
         self.assertIn('102', dph.highest_temp)
+        times, temps, t_min, t_max = DataPointHistoryProps.get_history_plot_data(fake_data)
+        self.assertIsInstance(times, list)
+        self.assertIsInstance(temps, list)
+        self.assertIsNotNone(t_min)
+        self.assertIsNotNone(t_max)
