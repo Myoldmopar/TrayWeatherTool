@@ -120,18 +120,6 @@ class TrayWeatherIcon:
             label=f"Update Frequency: {self.config.frequency_minutes} {pluralize}"
         )
         submenu_settings.append(menu_item_settings_update_rate)
-        if self.config.location.is_custom:
-            ne, nw, sw, se = self.config.location.get_custom_names_ne_nw_sw_se()
-        else:
-            ne, nw, sw, se = ["NotCustom", "NotCustom", "NotCustom", "NotCustom"]
-        self.menu_item_settings_ne_station = Gtk.MenuItem(label=f"Northeast Station: {ne}")
-        submenu_settings.append(self.menu_item_settings_ne_station)
-        self.menu_item_settings_se_station = Gtk.MenuItem(label=f"Northwest Station: {nw}")
-        submenu_settings.append(self.menu_item_settings_se_station)
-        self.menu_item_settings_nw_station = Gtk.MenuItem(label=f"Southwest Station: {sw}")
-        submenu_settings.append(self.menu_item_settings_nw_station)
-        self.menu_item_settings_sw_station = Gtk.MenuItem(label=f"Southeast Station: {se}")
-        submenu_settings.append(self.menu_item_settings_sw_station)
         menu_item_current_settings.set_submenu(submenu_settings)
         menu_main.append(menu_item_current_settings)
 
@@ -170,13 +158,6 @@ class TrayWeatherIcon:
         # show all....
         menu_main.show_all()
 
-        # but do make a few hidden if needed
-        if not self.config.location.is_custom:
-            self.menu_item_settings_ne_station.set_visible(False)
-            self.menu_item_settings_nw_station.set_visible(False)
-            self.menu_item_settings_sw_station.set_visible(False)
-            self.menu_item_settings_se_station.set_visible(False)
-
         self.indicator.set_menu(menu_main)
 
     def update(self, force_temp: float | None = None, force_storm: int | None = None):
@@ -188,11 +169,20 @@ class TrayWeatherIcon:
             temperature = force_temp
         else:
             if self.config.location.is_custom:
-                pass  # need to call custom location temp getter
-                temperature = -99
+                nw_key = mesonet_locations[self.config.location.north_west_index].key
+                ne_key = mesonet_locations[self.config.location.north_east_index].key
+                sw_key = mesonet_locations[self.config.location.south_west_index].key
+                se_key = mesonet_locations[self.config.location.south_east_index].key
+                temperatures = MesonetLocation.get_temps_by_keys([nw_key, ne_key, sw_key, se_key])
+                temperature = (
+                        temperatures[0] * self.config.location.north_west_weight +
+                        temperatures[1] * self.config.location.north_east_weight +
+                        temperatures[2] * self.config.location.south_west_weight +
+                        temperatures[3] * self.config.location.south_east_weight
+                )
             else:
                 location_key = mesonet_locations[self.config.location.predefined_index].key
-                temperature = MesonetLocation.get_temp_by_key(location_key)
+                temperature = MesonetLocation.get_temps_by_keys([location_key])[0]
         self.config.log_data_point(temperature)
         s_temp = str(int(temperature))
         # toggle the icon file flag, and use b if the toggle is set, otherwise back to a
@@ -238,11 +228,6 @@ class TrayWeatherIcon:
         self.config.location.set_from_predefined_index(location_index)
         # update menu label for this location name
         self.menu_item_settings_location.set_label(self.config.location.get_name())
-        # make sure to set these to hidden since we selected a predefined location
-        self.menu_item_settings_ne_station.set_visible(False)
-        self.menu_item_settings_nw_station.set_visible(False)
-        self.menu_item_settings_sw_station.set_visible(False)
-        self.menu_item_settings_se_station.set_visible(False)
         # rebuild storm manager
         lat, long = self.config.location.get_latitude_longitude()
         self.storms = StormManager(lat, long)
@@ -250,14 +235,16 @@ class TrayWeatherIcon:
         self.update()
 
     def on_custom_location(self, _widget):
-        DialogCustomLocation()
-        # if we selected one, make sure to update these and make them visible:
-        # self.menu_item_settings_ne_station
-        # self.menu_item_settings_se_station
-        # self.menu_item_settings_nw_station
-        # self.menu_item_settings_sw_station
+        d = DialogCustomLocation()
+        if d.custom_location:
+            attempt = self.config.location.set_from_custom_location(d.custom_location[0], d.custom_location[1])
+            if not attempt:  # could not get neighbors
+                return  # TODO: communicate to user
+        d.destroy()
+        # rebuild storm manager
         lat, long = self.config.location.get_latitude_longitude()
         self.storms = StormManager(lat, long)
+        self.menu_item_settings_location.set_label(self.config.location.get_name())
         # and of course do an update to get a fresh temperature
         self.update()
 
