@@ -83,4 +83,3 @@ class DataPointHistoryProps:
         canvas = FigureCanvas(figure)
         canvas.set_size_request(780, 450)
         return canvas
-
