@@ -278,7 +278,12 @@ class TrayWeatherIcon:
         else:
             font_size = 96
             height_offset = 20
-        font = ImageFont.truetype('/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf', font_size)
+        try:
+            font = ImageFont.truetype('/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf', font_size)
+        except OSError:  # pragma: no cover
+            # just in case we don't have this specific ttf file
+            print("Could not find Ubuntu-B.ttf font file")
+            font = ImageFont.load_default(font_size)
         text_bbox = draw.textbbox((0, 0), text, font=font)
         text_width = text_bbox[2] - text_bbox[0]
         text_height = text_bbox[3] - text_bbox[1]

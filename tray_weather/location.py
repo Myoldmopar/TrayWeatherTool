@@ -12,15 +12,20 @@ class MesonetLocation:
     @staticmethod
     def get_temp_by_key(key: str, unit_test_get: Optional[Callable] = None) -> float:
         csv_url = "https://www.mesonet.org/data/public/mesonet/current/current.csv.txt"
-        if unit_test_get is None:  # pragma: no cover
-            csv_response = get(csv_url)  # not unit testing the actual http request
-        else:
-            csv_response = unit_test_get(csv_url)
-        csv_data = csv_response.content.decode('utf-8')
-        csv_rows = csv_data.split("\n")
-        data: dict[str, list[str]] = {x.split(',')[0]: x.split(',') for x in csv_rows}
-        tokens = data[key]
-        return float(tokens[10])
+        try:
+            if unit_test_get is None:  # pragma: no cover
+                csv_response = get(csv_url)  # not unit testing the actual http request
+            else:
+                csv_response = unit_test_get(csv_url)
+            csv_data = csv_response.content.decode('utf-8')
+            csv_rows = csv_data.split("\n")
+            data: dict[str, list[str]] = {x.split(',')[0]: x.split(',') for x in csv_rows}
+            tokens = data[key]
+            return float(tokens[10])
+        except Exception as e:  # pragma: no cover
+            # could be a connection problem, content problem, etc.
+            print(f"Could not get temperature from Mesonet.  Exception: {e}")
+            return -999
 
 
 mesonet_locations = [
