@@ -48,6 +48,7 @@ class SolarDataManager:
         # get the current altitude angle as of right now as well
         self.now_altitude = altitude_angle(self.now, dst, longitude, standard_meridian, latitude)
 
+    def get_canvas(self):  # pragma: no cover
         # build out a matplotlib Figure instance to store the plotting
         figure = Figure(figsize=(5, 4), dpi=100)
         figure.subplots_adjust(top=0.96, right=0.96)
@@ -74,5 +75,6 @@ class SolarDataManager:
         # noinspection PyTypeChecker
         ax.text(self.this_morning_1210, -7, f"Sunset at {self.sunset_time}", fontsize=14, color='black')
         ax.legend()
-        self.canvas = FigureCanvas(figure)
-        self.canvas.set_size_request(780, 450)
+        canvas = FigureCanvas(figure)
+        canvas.set_size_request(780, 450)
+        return canvas

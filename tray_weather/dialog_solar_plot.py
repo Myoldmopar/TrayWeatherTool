@@ -12,7 +12,7 @@ class DialogSolarPlot(Gtk.Dialog):
         title = f"Solar Position Throughout the Day on {sdm.now.strftime('%Y-%m-%d')}"
         Gtk.Dialog.__init__(self, title, None, 0, Gtk.ButtonsType.OK)
         box = self.get_content_area()
-        box.add(sdm.canvas)
+        box.add(sdm.get_canvas())
         self.show_all()
         self.run()
         self.destroy()

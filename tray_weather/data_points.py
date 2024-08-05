@@ -63,7 +63,7 @@ class DataPointHistoryProps:
         return time_stamps, temperatures, min_temp, max_temp
 
     @staticmethod
-    def get_history_plot(temp_history: deque[DataPoint]) -> FigureCanvas:
+    def get_history_plot(temp_history: deque[DataPoint]) -> FigureCanvas:  # pragma: no cover
         # build out a matplotlib Figure instance to store the plotting
         figure = Figure(figsize=(5, 4), dpi=100)
         figure.subplots_adjust(top=0.96, right=0.96)
