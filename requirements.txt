@@ -21,6 +21,9 @@ coverage
 coveralls
 flake8
 
+# for polishing up the Pip install
+PLAN-Tools>=0.5
+
 # PyCharm will still likely complain about not being able to import stuff from pygobject
 # This is because it is generating this dynamically at runtime from compiled libs
 # You should be able to right click on the import error and say "generate stubs for ... Gtk" or whatever
