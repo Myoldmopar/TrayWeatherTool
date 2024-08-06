@@ -10,17 +10,22 @@ setup(
     version=VERSION,
     packages=[SOURCE_NAME],
     description=DESCRIPTION,
-    package_data={SOURCE_NAME: ['oklahoma.png']},
+    package_data={SOURCE_NAME: ['oklahoma.png', 'icons/icon.png']},
     include_package_data=True,
     long_description=readme_contents,
     long_description_content_type='text/markdown',
     author='Edwin Lee',
     url='https://github.com/Myoldmopar/TrayWeatherTool',
     license='ModifiedBSD',
-    install_requires=['matplotlib', 'requests', 'pygobject', 'pyperclip', 'pillow', 'solar-angles>=0.26'],
+    install_requires=[
+        'matplotlib', 'requests', 'pygobject', 'pyperclip', 'pillow', 'solar-angles>=0.26', 'PLAN-Tools>=0.5'
+    ],
     entry_points={
         'gui_scripts': [],
-        'console_scripts': ['tray_weather_tool=tray_weather.main:run_main']
+        'console_scripts': [
+            'tray_weather_tool=tray_weather.main:run_main',
+            'tray_weather_configure=tray_weather.main:configure'
+        ]
     },
     classifiers=[
         'Development Status :: 4 - Beta',

@@ -5,6 +5,7 @@ from tempfile import NamedTemporaryFile
 # Pip installed library imports
 from PIL import Image, ImageDraw, ImageFont
 import pyperclip
+from plan_tools.entry_point import EntryPoint
 
 # Use these lines to validate the gi library installation prior to importing from gi.repository
 import gi
@@ -306,6 +307,15 @@ def run_main():
     signal(SIGINT, SIG_DFL)
     TrayWeatherIcon()
     Gtk.main()
+
+
+def configure():  # pragma: no cover
+    source_dir = "tray_weather"
+    name = "tray_weather_tool"
+    description = "A Weather App-Indicator for Ubuntu in Oklahoma"
+    nice_name = "Tray Weather Tool Oklahoma"
+    s = EntryPoint(source_dir, name, nice_name, description, name)
+    s.run()
 
 
 if __name__ == "__main__":
