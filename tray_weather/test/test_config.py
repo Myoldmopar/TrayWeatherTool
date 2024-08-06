@@ -33,3 +33,7 @@ class TestConfig(TestCase):
         self.assertEqual(history_data.highest_temp, '9.0')  # 10-1 because of zero based index
         self.assertEqual(history_data.lowest_temp, '0.0')
         self.assertIsInstance(c.temp_history_for_clipboard(), str)
+        c.save_to_file()
+        # reopen the config file and it should reinterpret the now-filled-out temp history
+        c2 = Configuration(temp_config_file)
+        self.assertEqual(len(c2.temp_history), num_points_to_add)

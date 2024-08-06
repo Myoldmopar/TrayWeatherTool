@@ -22,7 +22,10 @@ class Configuration:
         try:
             with self.config_file.open() as f:
                 contents = loads(f.read())
+            self.frequency_minutes = contents['frequency_minutes']
             self.location.set_from_config(contents['location'])
+            for i in contents['temp_history']:
+                self.temp_history.append(DataPoint().from_dict(i))
         except Exception:
             # handle new file initialization as well as problems loading corrupted files
             # this should be covered by unit tests for new file initialization issues
@@ -36,7 +39,7 @@ class Configuration:
         # noinspection PyBroadException
         try:
             with self.config_file.open('w') as f:
-                f.write(dumps(config))
+                f.write(dumps(config, indent=2))
         except Exception:  # pragma: no cover
             pass  # just don't save if something goes that terribly wrong.  In the future this could show a dialog.
 

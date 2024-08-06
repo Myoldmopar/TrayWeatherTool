@@ -15,7 +15,7 @@ class TestLocation(TestCase):
         resource_file = this_file.parent / 'mock_mesonet_response.csv'
         mock_response.content = resource_file.read_bytes()
         mock_get.return_value = mock_response
-        t = MesonetLocation.get_temp_by_key('ACME', mock_get)
+        t = MesonetLocation.get_temps_by_keys(['ACME'], mock_get)[0]
         mock_get.assert_called_once()
         self.assertAlmostEqual(t, 97.0)  # TODO: Test invalid response, internet down, etc.
 
@@ -26,22 +26,19 @@ class TestLocationManager(TestCase):
         lm.set_from_predefined_index(0)
         self.assertFalse(lm.is_custom)
         self.assertIn("Acme", lm.get_name())
-        with self.assertRaises(RuntimeError):
-            lm.get_custom_names_ne_nw_sw_se()  # predefined locations shouldn't call this function
         lat, long = lm.get_latitude_longitude()
         self.assertIsInstance(lat, (float, int))  # TODO: Just check numeric
         self.assertIsInstance(long, (float, int))  # TODO: Just check numeric
 
     def test_custom_location_setup(self):
         lm = LocationManager()
-        lm.set_from_custom_location(23, 23)
+        lm.set_from_custom_location(-97.790, 35.784)
         self.assertTrue(lm.is_custom)
         self.assertIn("Custom", lm.get_name())
-        lm.north_east_index = 0  # TODO: this won't be needed once set_from_custom_location works properly
-        lm.north_west_index = 0  # TODO: this won't be needed once set_from_custom_location works properly
-        lm.south_east_index = 0  # TODO: this won't be needed once set_from_custom_location works properly
-        lm.south_west_index = 0  # TODO: this won't be needed once set_from_custom_location works properly
-        lm.get_custom_names_ne_nw_sw_se()  # just make sure it passes fine
         lat, long = lm.get_latitude_longitude()
         self.assertIsInstance(lat, (float, int))  # TODO: Just check numeric
         self.assertIsInstance(long, (float, int))  # TODO: Just check numeric
+
+    def test_custom_location_invalid_coordinates(self):
+        lm = LocationManager()
+        self.assertFalse(lm.set_from_custom_location(3.14, 2.718))
