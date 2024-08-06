@@ -116,10 +116,10 @@ class TrayWeatherIcon:
         self.menu_item_settings_location = Gtk.MenuItem(label=f"Location: {location_name}")
         submenu_settings.append(self.menu_item_settings_location)
         pluralize = "minutes" if self.config.frequency_minutes > 1 else "minute"
-        menu_item_settings_update_rate = Gtk.MenuItem(
+        self.menu_item_settings_update_rate = Gtk.MenuItem(
             label=f"Update Frequency: {self.config.frequency_minutes} {pluralize}"
         )
-        submenu_settings.append(menu_item_settings_update_rate)
+        submenu_settings.append(self.menu_item_settings_update_rate)
         menu_item_current_settings.set_submenu(submenu_settings)
         menu_main.append(menu_item_current_settings)
 
@@ -174,12 +174,24 @@ class TrayWeatherIcon:
                 sw_key = mesonet_locations[self.config.location.south_west_index].key
                 se_key = mesonet_locations[self.config.location.south_east_index].key
                 temperatures = MesonetLocation.get_temps_by_keys([nw_key, ne_key, sw_key, se_key])
-                temperature = (
-                        temperatures[0] * self.config.location.north_west_weight +
-                        temperatures[1] * self.config.location.north_east_weight +
-                        temperatures[2] * self.config.location.south_west_weight +
-                        temperatures[3] * self.config.location.south_east_weight
-                )
+                numerator = 0.0
+                denominator = 0.0
+                if temperatures[0] > -50:
+                    numerator += temperatures[0] * self.config.location.north_west_weight
+                    denominator += self.config.location.north_west_weight
+                if temperatures[1] > -50:
+                    numerator += temperatures[1] * self.config.location.north_east_weight
+                    denominator += self.config.location.north_east_weight
+                if temperatures[2] > -50:
+                    numerator += temperatures[2] * self.config.location.south_west_weight
+                    denominator += self.config.location.south_west_weight
+                if temperatures[3] > -50:
+                    numerator += temperatures[3] * self.config.location.south_east_weight
+                    denominator += self.config.location.south_east_weight
+                if denominator > 0:
+                    temperature = numerator / denominator
+                else:
+                    temperature = -99  # TODO: Alert user one-time-per-something that the temperature couldn't update
             else:
                 location_key = mesonet_locations[self.config.location.predefined_index].key
                 temperature = MesonetLocation.get_temps_by_keys([location_key])[0]
@@ -252,6 +264,8 @@ class TrayWeatherIcon:
         if self.timeout_id is not None:
             GLib.source_remove(self.timeout_id)
         self.config.frequency_minutes = frequency
+        pluralize = "minutes" if self.config.frequency_minutes > 1 else "minute"
+        self.menu_item_settings_update_rate.set_label(f"Update Frequency: {self.config.frequency_minutes} {pluralize}")
         self.timeout_id = GLib.timeout_add(frequency * 60 * 1000, self.on_timer_ticked)
 
     @staticmethod

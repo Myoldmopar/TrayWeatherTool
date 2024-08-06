@@ -54,8 +54,12 @@ class DataPointHistoryProps:
 
     @staticmethod
     def get_history_plot_data(temp_history: deque[DataPoint]) -> tuple:
-        time_stamps = [x.time_stamp for x in temp_history]
-        temperatures = [x.temperature for x in temp_history]
+        time_stamps = []
+        temperatures = []
+        for x in temp_history:
+            if x.temperature > -50:  # only take valid data points
+                time_stamps.append(x.time_stamp)
+                temperatures.append(x.temperature)
         min_temp, max_temp = None, None
         if len(temp_history) > 1:
             min_temp = min(temperatures)
@@ -77,15 +81,17 @@ class DataPointHistoryProps:
         ax.set_xlim([time_stamps[0], time_stamps[-1]])
         ax.set_ylim([-15, 115])
         ax.xaxis.set_major_formatter(DateFormatter('%y-%m-%d %H:%M'))
-        ax.set_ylabel('Recorded Temperature (F)')
+        ax.set_ylabel('Recorded Temperature (°F)')
         if min_temp and max_temp:
+            s_min_temp = str(round(min_temp, 2))
+            s_max_temp = str(round(max_temp, 2))
             time_range = time_stamps[-1] - time_stamps[0]
             x_label_offset = time_range / 40
             x_label_point = time_stamps[0] + x_label_offset
             # noinspection PyTypeChecker
-            ax.text(x_label_point, 2, f"Max Temp: {max_temp}", fontsize=14, color='black')
+            ax.text(x_label_point, 2, f"Max Temp: {s_max_temp} °F", fontsize=14, color='black')
             # noinspection PyTypeChecker
-            ax.text(x_label_point, -7, f"Min at {min_temp}", fontsize=14, color='black')
+            ax.text(x_label_point, -7, f"Min Temp: {s_min_temp} °F", fontsize=14, color='black')
         canvas = FigureCanvas(figure)
         canvas.set_size_request(780, 450)
         return canvas
