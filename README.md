@@ -10,8 +10,9 @@ You can install this directly from Pip: `pip install TrayWeatherTool-Oklahoma`. 
 package into your Python installation.  Anytime a tag is made on the repo it will build and push a wheel to PyPi, so
 you can check there for the latest version number if you want a specific version.
 
-Once in place, you can start the icon using one of two methods:
+Once in place, you can start the icon using one of three methods:
 
+- There will be a script called `tray_weather_configure`.  Running this will create a .desktop launcher in the appropriate place on your system.  With this in place, the icon can be launched with the Super button and typing "tray ...".
 - A command line script is installed called: `tray_weather_tool` that you can directly execute
 - You can also use module execution and call it like: `python3 -m tray_weather`
 

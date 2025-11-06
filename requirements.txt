@@ -10,7 +10,7 @@
 # and finally the actual Python packages
 matplotlib
 requests
-pygobject
+pygobject==3.48.2
 pyperclip
 pillow
 solar-angles>=0.26
