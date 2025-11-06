@@ -11,8 +11,8 @@ class Configuration:
     def __init__(self, override_config_file_path: Path | None = None):
         # set defaults here
         self.location = LocationManager()
-        self.temp_history: deque[DataPoint] = deque(maxlen=1000)
-        self.frequency_minutes = 1
+        self.temp_history: deque[DataPoint] = deque(maxlen=10000)
+        self.frequency_minutes = 5
         if override_config_file_path is not None:
             self.config_file = override_config_file_path
         else:  # pragma: no cover
