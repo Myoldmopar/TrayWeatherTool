@@ -50,26 +50,25 @@ class TrayWeatherIcon:
 
         menu_main = Gtk.Menu()
 
-        menu_item_action_items = Gtk.MenuItem(label="Action Items")
-        submenu_action_items = Gtk.Menu()
         menu_item_action_items_update = Gtk.MenuItem(label="Update Temperature Now")
         menu_item_action_items_update.connect("activate", self.update_now)
-        submenu_action_items.append(menu_item_action_items_update)
+        menu_main.append(menu_item_action_items_update)
+        menu_main.append(Gtk.SeparatorMenuItem())
+
         menu_item_action_items_plot = Gtk.MenuItem(label="Plot Temperature History")
         menu_item_action_items_plot.connect("activate", self.plot_temps)
-        submenu_action_items.append(menu_item_action_items_plot)
+        menu_main.append(menu_item_action_items_plot)
         menu_item_action_items_solar = Gtk.MenuItem(label="Plot Solar Path/Position")
         menu_item_action_items_solar.connect("activate", show_solar_plot)
-        submenu_action_items.append(menu_item_action_items_solar)
+        menu_main.append(menu_item_action_items_solar)
+        menu_main.append(Gtk.SeparatorMenuItem())
+
         menu_item_action_items_copy = Gtk.MenuItem(label="Copy Temperature History")
         menu_item_action_items_copy.connect("activate", self.copy_history)
-        submenu_action_items.append(menu_item_action_items_copy)
+        menu_main.append(menu_item_action_items_copy)
         menu_item_action_items_clear = Gtk.MenuItem(label="Clear Temperature History")
         menu_item_action_items_clear.connect("activate", self.clear_history)
-        submenu_action_items.append(menu_item_action_items_clear)
-        menu_item_action_items.set_submenu(submenu_action_items)
-        menu_main.append(menu_item_action_items)
-
+        menu_main.append(menu_item_action_items_clear)
         menu_main.append(Gtk.SeparatorMenuItem())
 
         menu_item_storm_tests = Gtk.MenuItem(label="Storm Tests")
