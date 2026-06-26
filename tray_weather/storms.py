@@ -45,6 +45,7 @@ class StormManager:
         self.longitude = longitude
 
     def icon_color(self, test_type: int | None = None):
+        self.get_watch_warnings()
         type_to_check = test_type if test_type else self.storm_type
         if type_to_check == StormType.FloodWatch:
             return 'powderblue'
